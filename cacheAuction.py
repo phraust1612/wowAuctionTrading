@@ -5,6 +5,7 @@ AH = "http://auction-api-kr.worldofwarcraft.com/auction-data/b5379d0559a34568a12
 LM = "https://kr.api.battle.net/wow/auction/data/durotan?locale=ko_KR&apikey=ks3xtugk5fdjdvp45h9yyq7756jszzg2"
 
 def LastModified():
+    global AH
     ans = int(time.time())
     try:
         res = rq.get(LM)
@@ -17,7 +18,6 @@ def LastModified():
     ans /= 1000
     checkurl = js['files'][0]['url']
     if checkurl != AH:
-        global AH
         AH = checkurl
     return ans
         
@@ -34,7 +34,7 @@ def CacheOne():
     return 0
 
 while True:
-    sleep(1800)
     tmp = SaveOne()
     while tmp!=0:
         tmp = SaveOne()
+    time.sleep(1800)
