@@ -16,6 +16,7 @@ def LastModified():
     js = res.json()
     ans = js['files'][0]['lastModified']
     ans /= 1000
+    ans = int(ans)
     checkurl = js['files'][0]['url']
     if checkurl != AH:
         AH = checkurl
@@ -34,7 +35,7 @@ def CacheOne():
     return 0
 
 while True:
-    tmp = SaveOne()
+    tmp = CacheOne()
     while tmp!=0:
         tmp = SaveOne()
     time.sleep(1800)
