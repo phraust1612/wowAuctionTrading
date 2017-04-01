@@ -1,41 +1,28 @@
 import requests as rq
 import time
+import json
 
-AH = "http://auction-api-kr.worldofwarcraft.com/auction-data/b5379d0559a34568a129fea645c060b9/auctions.json"
-LM = "https://kr.api.battle.net/wow/auction/data/durotan?locale=ko_KR&apikey=ks3xtugk5fdjdvp45h9yyq7756jszzg2"
+f=open("realms","r")
+s=f.read()
+f.close()
+js=json.loads(s)
+keys=list(js.keys())
 
-def LastModified():
-    global AH
-    ans = int(time.time())
-    try:
-        res = rq.get(LM)
-    except requests.exceptions.ConnectionError:
-        return ans
-    if res.status_code != 200:
-        return ans
-    js = res.json()
-    ans = js['files'][0]['lastModified']
-    ans /= 1000
-    ans = int(ans)
-    checkurl = js['files'][0]['url']
-    if checkurl != AH:
-        AH = checkurl
-    return ans
-        
 def CacheOne():
-    updatetime = LastModified()
-    try :
-        res = rq.get(AH)
-    except:
-        return -1
-    title = str(updatetime)+".txt"
-    f = open(title,"w")
-    f.write(res.text)
-    f.close()
-    return 0
+	for i in keys:
+		for j in js[i]:
+			name=list(j.keys())[0]
+			AH=j[name]
+    		try :
+        		res = rq.get(AH)
+    		except:
+				continue
+			updatetime = time.time()
+    		title = i+"_"+name+"_"+str(updatetime)+".txt"
+    		f = open(title,"w")
+    		f.write(res.text)
+    		f.close()
 
 while True:
-    tmp = CacheOne()
-    while tmp!=0:
-        tmp = SaveOne()
-    time.sleep(1800)
+    CacheOne()
+    time.sleep(3600)
