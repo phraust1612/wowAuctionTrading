@@ -18,7 +18,7 @@ def CacheOne():
     		except:
 				continue
 			updatetime = time.time()
-    		title = i+"_"+name+"_"+str(updatetime)+".txt"
+    		title = "data/"+i+"_"+name+"_"+str(updatetime)+".txt"
     		f = open(title,"w")
     		f.write(res.text)
     		f.close()
